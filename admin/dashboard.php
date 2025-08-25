@@ -52,6 +52,9 @@ $recent_applications = $stmt->fetchAll();
                         <a class="nav-link" href="manage_users.php"><i class="bi bi-people"></i> Manage Users</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="lender_config.php"><i class="bi bi-gear"></i> Lender Settings</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="generate_id.php"><i class="bi bi-plus-circle"></i> Generate ID</a>
                     </li>
                     <li class="nav-item">

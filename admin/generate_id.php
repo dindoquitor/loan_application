@@ -16,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Generate unique application ID
         $application_id = 'APP' . strtoupper(substr($last_name, 0, 3)) . date('YmdHis');
 
-        // Insert into database
-        $stmt = $pdo->prepare("INSERT INTO applications (application_id, admin_id, status) VALUES (?, ?, 'generated')");
-        $stmt->execute([$application_id, $_SESSION['user_id']]);
+        // Insert into database with intended last name
+        $stmt = $pdo->prepare("INSERT INTO applications (application_id, intended_last_name, admin_id, status) VALUES (?, ?, ?, 'generated')");
+        $stmt->execute([$application_id, $last_name, $_SESSION['user_id']]);
 
-        $success = "Application ID generated successfully: <strong>$application_id</strong>";
+        $success = "Application ID generated successfully: <strong>$application_id</strong><br>Intended Last Name: <strong>$last_name</strong>";
     } else {
         $error = "Please enter a last name";
     }
@@ -49,10 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                        <a class="nav-link active" href="dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="generate_id.php"><i class="bi bi-plus-circle"></i> Generate ID</a>
+                        <a class="nav-link" href="manage_users.php"><i class="bi bi-people"></i> Manage Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="generate_id.php"><i class="bi bi-plus-circle"></i> Generate ID</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="applications.php"><i class="bi bi-list-check"></i> Applications</a>
@@ -88,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="mb-3">
                                 <label for="last_name" class="form-label">Applicant's Last Name</label>
                                 <input type="text" class="form-control" id="last_name" name="last_name" required>
-                                <div class="form-text">This will be used to generate the application ID and as the username for login.</div>
+                                <div class="form-text">This will be used to generate the application ID and will be required for the applicant to login.</div>
                             </div>
                             <button type="submit" class="btn btn-primary">Generate Application ID</button>
                         </form>
@@ -102,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <div class="card-body">
                         <?php
-                        $stmt = $pdo->prepare("SELECT application_id, created_at 
+                        $stmt = $pdo->prepare("SELECT application_id, intended_last_name, created_at 
                                               FROM applications 
                                               WHERE status = 'generated' 
                                               ORDER BY created_at DESC 
@@ -116,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <thead>
                                         <tr>
                                             <th>Application ID</th>
+                                            <th>Intended Last Name</th>
                                             <th>Date Generated</th>
                                         </tr>
                                     </thead>
@@ -123,6 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <?php foreach ($recent_ids as $id): ?>
                                             <tr>
                                                 <td><?php echo htmlspecialchars($id['application_id']); ?></td>
+                                                <td><?php echo htmlspecialchars($id['intended_last_name']); ?></td>
                                                 <td><?php echo date('M d, Y H:i', strtotime($id['created_at'])); ?></td>
                                             </tr>
                                         <?php endforeach; ?>
