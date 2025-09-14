@@ -51,7 +51,7 @@ $setup_complete = isset($_GET['setup']) && $_GET['setup'] === 'complete';
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h3 class="text-center">Admin Login</h3>
+                        <h3 class="text-center">Admin Login here.</h3>
                     </div>
                     <div class="card-body">
                         <?php if ($setup_complete): ?>
